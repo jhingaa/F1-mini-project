@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, re
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import streamlit as st
@@ -7,7 +7,7 @@ from src.data.processor import (
     get_lap_positions, get_driver_info, get_lap_times,
     get_gap_to_leader, get_session_results, get_fastest_lap_info,
 )
-from src.data.circuit_info import CIRCUIT_FLAGS, CIRCUIT_NAMES
+from src.data.circuit_info import CIRCUIT_FLAGS, CIRCUIT_NAMES, CIRCUIT_LAYOUT_IMAGES
 from src.viz.replay import build_replay_figure
 from src.viz.lap_times import build_lap_times_figure, build_duel_figure
 from src.viz.gap_chart import build_gap_figure
@@ -208,7 +208,16 @@ else:
 col_img, col_info = st.columns([3, 2], gap="medium")
 
 with col_img:
-    if circuit_outline is not None:
+    layout_img_url = CIRCUIT_LAYOUT_IMAGES.get(meta["gp"])
+    if layout_img_url:
+        st.markdown(
+            f'<div style="border-radius:14px;overflow:hidden;border:1px solid #2a2a4a;">'
+            f'<img src="{layout_img_url}" '
+            f'style="width:100%;display:block;max-height:340px;object-fit:contain;'
+            f'background:#0d0d1a;" /></div>',
+            unsafe_allow_html=True,
+        )
+    elif circuit_outline is not None:
         st.plotly_chart(
             circuit_outline,
             use_container_width=True,
@@ -270,8 +279,20 @@ if meta["session_type"] in ("R", "S") and not results.empty:
             r = results.iloc[idx]
             clr = team_color(r.get("TeamName",""))
             accent = highlight[idx]
-            time_txt = str(r.get("Time","")).split(".")
-            time_disp = time_txt[0] if time_txt[0] not in ("NaT","nan","None","") else r.get("Status","")
+            import pandas as _pd
+            try:
+                _t = r.get("Time", None)
+                if _t is not None and _pd.notna(_t):
+                    _ts = float(_t.total_seconds())
+                    _h, _rem = divmod(int(_ts), 3600)
+                    _m, _sec = divmod(_rem, 60)
+                    _ms = round((_ts - int(_ts)) * 1000)
+                    time_disp = (f"{_h}:{_m:02d}:{_sec:02d}.{_ms:03d}" if _h > 0
+                                 else f"+{_m}:{_sec:02d}.{_ms:03d}")
+                else:
+                    time_disp = str(r.get("Status", ""))
+            except Exception:
+                time_disp = str(r.get("Status", ""))
             col.markdown(f"""
             <div style="
                 background:linear-gradient(135deg, {clr}18, #111128);
@@ -287,7 +308,9 @@ if meta["session_type"] in ("R", "S") and not results.empty:
               <div style="font-size:0.85rem; color:{clr}; font-weight:600; margin:0.3rem 0;">
                 {r.get("TeamName","—")}
               </div>
-              <div style="font-size:0.78rem; color:#777;">{time_disp}</div>
+              <div style="font-size:0.78rem; color:#777; margin-top:0.4rem; text-align:center;">
+                {time_disp}
+              </div>
             </div>
             """, unsafe_allow_html=True)
 

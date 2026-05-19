@@ -66,6 +66,38 @@ CIRCUIT_WIKI = {
     "Abu Dhabi": "Yas_Marina_Circuit",
 }
 
+_F1CDN = (
+    "https://media.formula1.com/image/upload/c_fit,h_704/q_auto/v1740000001"
+    "/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/"
+)
+
+CIRCUIT_LAYOUT_IMAGES = {
+    "Bahrain":        _F1CDN + "Bahrain_Circuit.webp",
+    "Saudi Arabia":   _F1CDN + "Saudi_Arabia_Circuit.webp",
+    "Australia":      _F1CDN + "Australia_Circuit.webp",
+    "Japan":          _F1CDN + "Japan_Circuit.webp",
+    "China":          _F1CDN + "China_Circuit.png",
+    "Miami":          _F1CDN + "Miami_Circuit.webp",
+    "Emilia Romagna": _F1CDN + "Emilia_Romagna_Circuit.webp",
+    "Monaco":         _F1CDN + "Monaco_Circuit.webp",
+    "Canada":         _F1CDN + "Canada_Circuit.webp",
+    "Spain":          _F1CDN + "Spain_Circuit.webp",
+    "Austria":        _F1CDN + "Austria_Circuit.webp",
+    "Great Britain":  _F1CDN + "Great_Britain_Circuit.webp",
+    "Hungary":        _F1CDN + "Hungary_Circuit.webp",
+    "Belgium":        _F1CDN + "Belgium_Circuit.webp",
+    "Netherlands":    _F1CDN + "Netherlands_Circuit.webp",
+    "Italy":          _F1CDN + "Italy_Circuit.webp",
+    "Azerbaijan":     _F1CDN + "Baku_Circuit.webp",
+    "Singapore":      _F1CDN + "Singapore_Circuit.webp",
+    "United States":  _F1CDN + "USA_Circuit.webp",
+    "Mexico City":    _F1CDN + "Mexico_Circuit.webp",
+    "São Paulo":      _F1CDN + "Brazil_Circuit.webp",
+    "Las Vegas":      _F1CDN + "Las_Vegas_Circuit.webp",
+    "Qatar":          _F1CDN + "Qatar_Circuit.webp",
+    "Abu Dhabi":      _F1CDN + "Abu_Dhabi_Circuit.png",
+}
+
 
 @lru_cache(maxsize=32)
 def get_circuit_image_url(gp_name: str) -> str | None:
