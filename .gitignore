@@ -1,0 +1,15 @@
+cache/
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+.DS_Store
+data/raw/
+data/processed/
+*.ipynb_checkpoints/
+.streamlit/secrets.toml
